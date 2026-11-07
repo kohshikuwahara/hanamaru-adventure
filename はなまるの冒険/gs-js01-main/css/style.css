@@ -1,0 +1,50 @@
+
+body {
+    width: 920px;
+    margin: 0 auto;
+    font-family: sans-serif;
+}
+
+header {
+    text-align: center;
+    padding: 30px;
+}
+
+.status {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.battle {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    padding: 50px 0;
+}
+
+.battle img {
+    width: 200px;
+}
+
+.actions {
+    text-align: center;
+    padding: 30px;
+}
+
+button {
+    padding: 15px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.result {
+    text-align: center;
+    padding: 30px;
+}
+
+.enemy img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}

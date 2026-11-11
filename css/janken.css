@@ -20,3 +20,25 @@ section {
   justify-content: center;
   align-items: center;
 }
+/* HPゲージの外側 */
+.hp-bar {
+    width: 200px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* はなまるのHP */
+#hanamaru_hp_bar {
+    width: 100%;
+    height: 100%;
+    background-color: green;
+}
+
+/* 敵のHP */
+#enemy_hp_bar {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+}

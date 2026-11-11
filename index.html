@@ -20,24 +20,33 @@
 
     <main>
 
-        <!-- ステータス -->
-        <section class="status">
-            <p id="hp">HP：120</p>
-            <p id="meat">肉：0個</p>
-        </section>
+       <!-- ステータス -->
+<section class="status">
+    <p id="meat">肉：0個</p>
+</section>
+</section>
 
         <!-- 戦闘画面 -->
         <section class="battle">
 
             <div class="hanamaru">
-                <h2>はなまる</h2>
-                <img id="hanamaru_img" src="images/hanamaru.png" alt="はなまる">
-            </div>
+    <h2>はなまる</h2>
+    <img id="hanamaru_img" src="images/hanamaru.png" alt="はなまる">
+
+    <p id="hp">HP：120</p>
+
+    <div class="hp-bar">
+        <div id="hanamaru_hp_bar"></div>
+    </div>
+</div>
 
             <div class="enemy">
                 <h2 id="enemy_name">イノシシ</h2>
                 <img id="enemy_img" src="images/inoshishi.png" alt="敵">
                 <p id="enemy_hp">敵HP：100</p>
+                <div class="hp-bar">
+    <div id="enemy_hp_bar"></div>
+</div>
             </div>
 
         </section>

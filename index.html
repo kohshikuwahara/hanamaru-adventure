@@ -17,36 +17,55 @@
         <h1>はなまるの冒険</h1>
         <p>最強の猟犬を目指せ！</p>
     </header>
+<!-- BGM -->
+<audio id="bgm" src="sounds/bgm.mp3" loop></audio>
+<audio id="attack_sound" src="sounds/attack.mp3"></audio>
+<button id="bgm_button">🎵 BGMを再生</button>
 
     <main>
 
-       <!-- ステータス -->
-<section class="status">
-    <p id="meat">肉：0個</p>
-</section>
-</section>
+        <!-- ステータス -->
+        <section class="status">
+            <div class="meat-area">
+                <p id="meat">肉：0個</p>
+                <div id="meat_icons"></div>
+            </div>
+        </section>
+
+        <!-- 肉の獲得演出 -->
+        <div id="meat_effect">🥩 GET！</div>
 
         <!-- 戦闘画面 -->
         <section class="battle">
 
+            <!-- はなまる -->
             <div class="hanamaru">
-    <h2>はなまる</h2>
-    <img id="hanamaru_img" src="images/hanamaru.png" alt="はなまる">
+                <h2>はなまる</h2>
+                <img id="hanamaru_img" src="images/hanamaru.png" alt="はなまる">
 
-    <p id="hp">HP：120</p>
+                <!-- ★追加：はなまるの技名 -->
+                <p id="hanamaru_move"></p>
 
-    <div class="hp-bar">
-        <div id="hanamaru_hp_bar"></div>
-    </div>
-</div>
+                <p id="hp">HP：120</p>
 
+                <div class="hp-bar">
+                    <div id="hanamaru_hp_bar"></div>
+                </div>
+            </div>
+
+            <!-- 敵 -->
             <div class="enemy">
                 <h2 id="enemy_name">イノシシ</h2>
                 <img id="enemy_img" src="images/inoshishi.png" alt="敵">
+
+                <!-- ★追加：敵の技名 -->
+                <p id="enemy_move"></p>
+
                 <p id="enemy_hp">敵HP：100</p>
+
                 <div class="hp-bar">
-    <div id="enemy_hp_bar"></div>
-</div>
+                    <div id="enemy_hp_bar"></div>
+                </div>
             </div>
 
         </section>
@@ -67,7 +86,20 @@
         <section class="result" id="result">
             敵が現れた！
         </section>
+        <!-- ゲームクリア画面 -->
+<div id="clear_screen">
+    <h2>🎉 GAME CLEAR 🎉</h2>
+    <p>はなまるは最強の猟犬になった！</p>
+    <p>🥩🥩🥩🥩🥩</p>
+    <button id="restart">もう一度冒険する！</button>
+</div>
 
+<!-- ゲームオーバー画面 -->
+<div id="gameover_screen">
+    <h2>💀 GAME OVER 💀</h2>
+    <p>はなまるは力尽きた……</p>
+    <button id="retry">もう一度挑戦する！</button>
+</div>
     </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

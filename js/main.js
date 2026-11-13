@@ -5,16 +5,33 @@ let meat = 0;
 let enemyDamage = 20;
 let enemyMoves = [];
 
+// =====================================
+// HPゲージを更新する
+// =====================================
 function updateHpBar() {
-  // はなまるのHPゲージ
   let hpPercent = (hp / 120) * 100;
   $("#hanamaru_hp_bar").css("width", hpPercent + "%");
 
-  // 敵のHPゲージ
   let enemyHpPercent = (enemyHp / enemyMaxHp) * 100;
   $("#enemy_hp_bar").css("width", enemyHpPercent + "%");
 }
+
+// =====================================
+// 肉のアイコンを表示する
+// =====================================
+function updateMeatDisplay() {
+  let meatIcons = "";
+
+  for (let i = 0; i < meat; i++) {
+    meatIcons = meatIcons + "🥩";
+  }
+
+  $("#meat_icons").text(meatIcons);
+}
+
+// =====================================
 // 敵をランダムに登場させる
+// =====================================
 function newEnemy() {
   const randomNumber2 = Math.floor(Math.random() * 5);
 
@@ -45,29 +62,42 @@ function newEnemy() {
     enemyHp = 100;
     enemyDamage = 20;
     enemyMoves = ["後ろ蹴り", "角で突く", "華麗にかわす"];
-
   } else if (randomNumber2 === 4) {
     $("#enemy_name").text("クマ");
     $("#enemy_img").attr("src", "images/kuma.png");
     enemyHp = 160;
     enemyDamage = 30;
-    enemyMoves = ["強烈な爪攻撃", "大きな口でかみつく", "地面を叩きつける"];  }
+    enemyMoves = ["強烈な爪攻撃", "大きな口でかみつく", "地面を叩きつける"];
+  }
 
-  // 敵の最大HPを保存
+  // 最大HPを保存
   enemyMaxHp = enemyHp;
+
   // 敵の登場メッセージ
   $("#result").text($("#enemy_name").text() + "が現れた！");
 
-  // HPを表示
+  // HPを更新
   $("#hp").text("HP：" + hp);
   $("#enemy_hp").text("敵HP：" + enemyHp);
+
   updateHpBar();
+  updateMeatDisplay();
+
+  // 技名をリセット
+  $("#hanamaru_move").text("");
+  $("#enemy_move").text("");
 
   // はなまるの画像を元に戻す
-  $("#hanamaru_img").attr("src", "images/hanamaru.png");
+  $("#hanamaru_img")
+    .removeClass("attack damage")
+    .attr("src", "images/hanamaru.png");
+
+  $("#enemy_img").removeClass("damage");
 }
 
-// 技の名前
+// =====================================
+// はなまるの技
+// =====================================
 const moves = ["かみつく", "うなる", "おしっこ", "うんこ", "可愛いポーズ"];
 
 // 技の画像
@@ -88,44 +118,80 @@ const wins = [
   [1, 3],
 ];
 
+// =====================================
 // 戦闘処理
+// =====================================
 function battle(myAttack) {
-  // ゲーム終了時は攻撃できない
+  // ゲームが終了していたら攻撃できない
   if (hp <= 0 || enemyHp <= 0 || meat >= 5) {
     return;
   }
 
-  // 敵の技をランダムに決める
+  // BGMを初回の攻撃時に再生する
+const bgm = $("#bgm")[0];
+
+if (bgm && bgm.paused) {
+    bgm.play().catch(function () {
+        console.log("BGMを再生できませんでした");
+    });
+}
+
+  // 攻撃音を再生
+  const attackSound = $("#attack_sound")[0];
+  attackSound.currentTime = 0;
+  attackSound.play();
+
+  // 敵の攻撃をランダムに決める
   const enemyAttack = Math.floor(Math.random() * 5);
-// 敵の技を3種類からランダムに選ぶ
-const randomMove = Math.floor(Math.random() * 3);
-  // はなまるの画像を変更
+
+  // 敵の技名を3種類から選ぶ
+  const randomMove = Math.floor(Math.random() * 3);
+
+  // はなまるの技画像に変更
   $("#hanamaru_img").attr("src", moveImages[myAttack]);
-// 攻撃アニメーションを実行
-$("#hanamaru_img").removeClass("attack");
-$("#hanamaru_img")[0].offsetWidth;
-$("#hanamaru_img").addClass("attack");
+
+  // キャラクターの下に技名を表示
+  $("#hanamaru_move").text("⚔️ " + moves[myAttack] + "！");
+  $("#enemy_move").text("💥 " + enemyMoves[randomMove] + "！");
+
+  // 攻撃アニメーション
+  $("#hanamaru_img").removeClass("attack damage");
+  $("#hanamaru_img")[0].offsetWidth;
+  $("#hanamaru_img").addClass("attack");
+
   // 戦闘メッセージ
-  let message = "はなまる：" + moves[myAttack] +
-    " / " + $("#enemy_name").text() + "：" + enemyMoves[randomMove];
+  let message =
+    "はなまる：" +
+    moves[myAttack] +
+    " / " +
+    $("#enemy_name").text() +
+    "：" +
+    enemyMoves[randomMove];
+
+  // =====================================
   // 勝敗判定
+  // =====================================
+
   if (myAttack === enemyAttack) {
     message = message + " → あいこ！";
   } else if (wins[myAttack].includes(enemyAttack)) {
-    // はなまるの攻撃力は25
+    // はなまるが勝った
     enemyHp = enemyHp - 25;
-// 敵がダメージを受けたときに震える
-$("#enemy_img").removeClass("damage");
-$("#enemy_img")[0].offsetWidth;
-$("#enemy_img").addClass("damage");
+
+    // 敵が震える
+    $("#enemy_img").removeClass("damage");
+    $("#enemy_img")[0].offsetWidth;
+    $("#enemy_img").addClass("damage");
+
     message = message + " → はなまるの勝ち！";
   } else {
-    // 敵の攻撃
+    // はなまるが負けた
     hp = hp - enemyDamage;
-    // はなまるがダメージを受けたら震える
-$("#hanamaru_img").removeClass("damage");
-$("#hanamaru_img")[0].offsetWidth;
-$("#hanamaru_img").addClass("damage");
+
+    // はなまるが震える
+    $("#hanamaru_img").removeClass("attack damage");
+    $("#hanamaru_img")[0].offsetWidth;
+    $("#hanamaru_img").addClass("damage");
 
     message = message + " → はなまるの負け！";
   }
@@ -142,22 +208,38 @@ $("#hanamaru_img").addClass("damage");
   // HPを表示
   $("#hp").text("HP：" + hp);
   $("#enemy_hp").text("敵HP：" + enemyHp);
+
   updateHpBar();
 
+  // =====================================
   // ゲーム終了判定
+  // =====================================
+
   if (hp <= 0) {
-    // はなまるが負けた
+    // ゲームオーバー
     message = message + " ゲームオーバー！";
+    $("#gameover_screen").show();
   } else if (enemyHp <= 0) {
-    // 敵を倒したら肉を獲得
+    // 敵を倒したら肉を1個獲得
     meat = meat + 1;
     $("#meat").text("肉：" + meat + "個");
 
+    // 肉のアイコンを更新
+    updateMeatDisplay();
+
+    // 肉GETアニメーション
+    $("#meat_effect").removeClass("meat-animation");
+    $("#meat_effect")[0].offsetWidth;
+    $("#meat_effect").addClass("meat-animation");
+
     message = message + " 敵を倒した！肉を1個獲得！";
 
-    // 肉が5個になったらゲームクリア
     if (meat >= 5) {
+      // ゲームクリア
       message = "🎉 ゲームクリア！はなまるは最強の猟犬になった！";
+
+      // クリア画面を表示
+      $("#clear_screen").show();
     } else {
       // 1.5秒後に次の敵が登場
       setTimeout(function () {
@@ -169,6 +251,10 @@ $("#hanamaru_img").addClass("damage");
   // 戦闘結果を表示
   $("#result").text(message);
 }
+
+// =====================================
+// 技ボタン
+// =====================================
 
 // かみつく
 $("#bite").on("click", function () {
@@ -198,9 +284,37 @@ $("#cute").on("click", function () {
 // おまかせ技
 $("#random").on("click", function () {
   const randomAttack = Math.floor(Math.random() * 5);
-
   battle(randomAttack);
 });
 
-// 最初の敵を登場させる
+// ★リスタート機能
+$("#restart").on("click", function () {
+  meat = 0;
+  $("#meat").text("肉：0個");
+  $("#clear_screen").hide();
+  newEnemy();
+});
+
+// =====================================
+// ゲーム開始
+// =====================================
+// ゲームオーバー後のリスタート
+$("#retry").on("click", function () {
+  meat = 0;
+  $("#meat").text("肉：0個");
+  $("#gameover_screen").hide();
+  newEnemy();
+});
+// BGMの再生・停止
+$("#bgm_button").on("click", function () {
+  const bgm = $("#bgm")[0];
+
+  if (bgm.paused) {
+    bgm.play();
+    $(this).text("🔇 BGMを停止");
+  } else {
+    bgm.pause();
+    $(this).text("🎵 BGMを再生");
+  }
+});
 newEnemy();
